@@ -1,5 +1,6 @@
 import random
 import time
+import selenium
 
 
 #Arrays containing first names and last names
@@ -24,37 +25,48 @@ for x in range(emailLetters):
 
 for x in range(emailPassword2):
     emailPassword=(emailPassword + (alphabet[random.randint(0,35)]))
-    
-
-#Fake typing
-delayType = random.randint(0,2)
 
 #Random Name from array
 name = names[random.randint(0,2737)]
 lastName = lastNames[random.randint(0,149)]
 
+#Fake typing
+
+from selenium import webdriver
+from selenium.webdriver.remote.command import Command
+
+browser = webdriver.Chrome("C:/Users/jpcon/Desktop/David Hasselbot/chromedriver")
+
+def realisticTyping(elementName,text):
+    browser.find_element_by_name(elementName).click()
+    for letter in text:
+        time.sleep(random.randint(1,100)/100)
+        browser.find_element_by_name(elementName).send_keys(letter)
 
 
 
+    
+#Main code
 from selenium import webdriver
 
 browser = webdriver.Chrome("C:/Users/jpcon/Desktop/David Hasselbot/chromedriver")    #You need to edit this part for wherever your chromedriver exe is located
 browser.get("https://accounts.google.com/sigNup")
 
-firstName = browser.find_element_by_name("firstName")
-firstName.send_keys(name)
+realisticTyping("firstName",name)
 
-surname = browser.find_element_by_name("lastName")
-surname.send_keys(lastName)
+realisticTyping("lastName", lastName)
 
-username = browser.find_element_by_name("Username")
-username.send_keys(email)
+realisticTyping("Username", email)
+                   
+realisticTyping("Passwd", emailPassword)
 
-password = browser.find_element_by_name("Passwd")
-password.send_keys(emailPassword)
-
-password = browser.find_element_by_name("ConfirmPasswd")
-password.send_keys(emailPassword)
+realisticTyping("ConfirmPasswd", emailPassword)
 
 nextButton = browser.find_element_by_id("accountDetailsNext")
 nextButton.click()
+
+
+        
+
+
+
